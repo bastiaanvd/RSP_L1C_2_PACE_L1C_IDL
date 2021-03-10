@@ -1,0 +1,2 @@
+﻿Date,path to RSP data,part of path before date,part of path after date,path out,file out prefix,file out end,path to PACE structure file
+all,/Users/bvandied/ORACLES/RSP_L1C/,RSP2_,_L1C,../RSP2PACE_DATA/ORACLES/,PACE_RSP.,.L1C.100m.nc,./DATA_STRUCTURE/

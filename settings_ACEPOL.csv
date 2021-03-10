@@ -1,0 +1,2 @@
+﻿Date,path to RSP data,part of path before date,part of path after date,path out,file out prefix,file out end,path to PACE structure file
+20171019,/Users/bvandied/ACEPOL/DATA/L1C_V003/,RSP2_,_L1C_V003,../RSP2PACE_DATA/ACEPOL/,PACE_RSP.,.L1C.100m.nc,./DATA_STRUCTURE/

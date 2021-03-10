@@ -1,0 +1,27 @@
+VAR_NAMES,VAR_TYPE,FOLDER,VAR_NDIMS,VAR_DIM_POINTER1,VAR_DIM_POINTER2,VAR_DIM_POINTER3,VAR_DIM_POINTER4,VAR_NATTRIBUTES,VAR_ATTRIBUTE_NAME1,VAR_ATTRIBUTE_NAME2,VAR_ATTRIBUTE_NAME3,VAR_ATTRIBUTE_NAME4,VAR_ATTRIBUTE_NAME5,VAR_ATTRIBUTE_NAME6,VAR_ATTRIBUTE_NAME7,VAR_ATTRIBUTE_VALUE1,VAR_ATTRIBUTE_VALUE2,VAR_ATTRIBUTE_VALUE3,VAR_ATTRIBUTE_VALUE4,VAR_ATTRIBUTE_VALUE5,VAR_ATTRIBUTE_VALUE6,VAR_ATTRIBUTE_VALUE7
+view_angles,FLOAT,0,1,0,-1,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,,,Along-track view angles for sensor,degrees,-999,-80,80,,
+intensity_wavelengths,FLOAT,0,2,1,0,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,,,Intensity field center wavelengths at each view,nm,-999,320,2260,,
+intensity_bandpasses,FLOAT,0,2,1,0,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,,,Intensity field bandpasses at each view,nm,-999,2.5,100,,
+polarization_wavelengths,FLOAT,0,2,2,0,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,,,Polarization field wavelengths at each view,nm,-999,320,2260,,
+polarization_bandpasses,FLOAT,0,2,2,0,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,,,Polarization field bandpasses at each view,nm,-999,2.5,40,,
+intensity_F0,FLOAT,0,2,1,0,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,,,Intensity band solar irradiance,W m^-2 um^-1,-999,0,2500,,
+polarization_F0,FLOAT,0,2,2,0,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,,,Polarization band solar irradiance,W m^-2 um^-1,-999,0,2500,,
+nadir_view_time,DOUBLE,1,1,3,-1,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,,,Time bin was viewed at nadir view,seconds,-999,0,86400.999,,
+view_time_offsets,DOUBLE,1,3,0,4,3,-1,5,long_name,units,_fillvalue,valid_min,valid_max,,,Time offsets of views from nadir view,seconds,-999,-200,200,,
+latitude,FLOAT,2,2,4,3,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,,,Latitudes of bin locations,degrees_north,-999,-90,90,,
+longitude,FLOAT,2,2,4,3,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,,,Longitudes of bin locations,degrees_east,-999,-180,180,,
+altitude,INT,2,2,4,3,-1,-1,7,long_name,units,_fillvalue,valid_min,valid_max,scale_factor,add_offset,Altitude at bin locations,meters,-32768,-1000,10000,1,0
+altitude_variability,INT,2,2,4,3,-1,-1,7,long_name,units,_fillvalue,valid_min,valid_max,scale_factor,add_offset,RMS variability of altitude at bin locations,meters,-32768,0,1000,1,0
+sensor_azimuth,INT,2,3,0,4,3,-1,7,long_name,units,_fillvalue,valid_min,valid_max,scale_factor,add_offset,Sensor azimuth angles at bin locations,degrees,-32768,-18000,18000,0.01,0
+sensor_zenith,INT,2,3,0,4,3,-1,7,long_name,units,_fillvalue,valid_min,valid_max,scale_factor,add_offset,Sensor zenith angles at bin locations,degrees,-32768,0,18000,0.01,0
+solar_azimuth,INT,2,2,4,3,-1,-1,7,long_name,units,_fillvalue,valid_min,valid_max,scale_factor,add_offset,Solar azimuth angle at bin locations,degrees,-32768,-18000,18000,0.01,0
+solar_zenith,INT,2,2,4,3,-1,-1,7,long_name,units,_fillvalue,valid_min,valid_max,scale_factor,add_offset,Solar zenith angle at bin locations,degrees,-32768,0,18000,0.01,0
+obs_per_view,INT,3,3,0,4,3,-1,3,long_name,valid_min,valid_max,,,,,Observations contributing to bin from each view,0,999,,,,
+I,FLOAT,3,4,1,0,4,3,5,long_name,units,_fillvalue,valid_min,valid_max,,,I Stokes vector component,W m^-2 sr^-1 um^-1,-999,0,999,,
+I_noise,FLOAT,3,4,1,0,4,3,5,long_name,units,_fillvalue,valid_min,valid_max,,,Random noise of I in bin,W m^-2 sr^-1 um^-1,-999,0,800,,
+Q,FLOAT,3,4,2,0,4,3,5,long_name,units,_fillvalue,valid_min,valid_max,,,Q Stokes vector component,W m^-2 sr^-1 um^-1,-999,-800,800,,
+Q_noise,FLOAT,3,4,2,0,4,3,5,long_name,units,_fillvalue,valid_min,valid_max,,,Random noise of Q in bin,W m^-2 sr^-1 um^-1,-999,0,800,,
+U,FLOAT,3,4,2,0,4,3,5,long_name,units,_fillvalue,valid_min,valid_max,,,U Stokes vector component,W m^-2 sr^-1 um^-1,-999,-800,800,,
+U_noise,FLOAT,3,4,2,0,4,3,5,long_name,units,_fillvalue,valid_min,valid_max,,,Random noise of U in bin,W m^-2 sr^-1 um^-1,-999,0,800,,
+DOLP,FLOAT,3,4,2,0,4,3,4,long_name,_fillvalue,valid_min,valid_max,,,,Degree of linear polarization,-999,0,99,,,
+DOLP_noise,FLOAT,3,4,2,0,4,3,4,long_name,_fillvalue,valid_min,valid_max,,,,Random noise of DOLP in bin,-999,0,99,,,
