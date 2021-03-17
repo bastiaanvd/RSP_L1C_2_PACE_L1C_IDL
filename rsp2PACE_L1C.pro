@@ -56,7 +56,7 @@
 ;     12 October 2020: changed to work on ER-2 data (time stamp 20190629T000839Z) instead of P3 data
 ;     10 December 2020: corrected solar constant definition and units
 ;     19 February 2021: Recoded for more flexibility; should now work on any current RSP L1C data 
-;     10 March 2021: added setting.csv file
+;     10 March 2021: added setting.csv file 
 ;
 ;
 ; :Notes
