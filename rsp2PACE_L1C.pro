@@ -36,11 +36,6 @@
 ;   These structure files can be altered, but header item names need to stay the same!
 ;   folder and dimension pointers in the variables.csv file point to those in the folders.csv and dimension.csv files (in order)
 ;   
-;   See "settings" below to set
-;       -path to output 
-;       -path to data structure .csv files
-;       -path to data
-;       -dates to loop over, or enter -1 to loop over all dates in data folder
 ;   
 ; :Author:
 ;    Bastiaan van Diedenhoven   
