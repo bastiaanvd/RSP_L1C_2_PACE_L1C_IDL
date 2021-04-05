@@ -119,9 +119,15 @@ pointer_attr_value1=where(var_fields eq 'VAR_ATTRIBUTE_VALUE1')
 ;get all dates if needed 
 ;---------------------------------
 IF(dates[0] eq 'all')THEN BEGIN
-    finddates=FILE_BASENAME(FILE_SEARCH(path_rsp+path1+'????????'+path2,COUNT=nfiles))
+    finddates=FILE_BASENAME(FILE_SEARCH(path_rsp[0]+path1[0]+'????????'+path2[0],COUNT=ndates))
     parts=STRSPLIT(finddates,'_',/EXTRACT)
     dates=parts[1]
+    path_rsp=REPLICATE(path_rsp[0],ndates)
+    path1=REPLICATE(path1[0],ndates)
+    path2=REPLICATE(path2[0],ndates)
+    file_out1=REPLICATE(file_out1[0],ndates)
+    file_out2=REPLICATE(file_out2[0],ndates)
+
     IF ~KEYWORD_SET(switch_no_talk)THEN print,'processing all dates in directory path_rsp: '
     IF ~KEYWORD_SET(switch_no_talk)THEN print,dates
 ENDIF
@@ -131,7 +137,7 @@ ENDIF
 ndates=n_elements(dates)
 FOR idate=0,ndates-1 DO BEGIN
     IF ~KEYWORD_SET(switch_no_talk)THEN print,'     date',idate+1,'/',ndates,' :',dates[idate]
-    path_date=path_rsp+path1+dates[idate]+path2+'/'
+    path_date=path_rsp[idate]+path1[idate]+dates[idate]+path2[idate]+'/'
     files=FILE_BASENAME(FILE_SEARCH(path_date+'RSP*.h5',COUNT=nfiles))
     
     IF(nfiles eq 0)THEN stop,'no files found at '+path_date
@@ -150,7 +156,7 @@ FOR idate=0,ndates-1 DO BEGIN
         bands_FWHM=[25.52821700	, 19.16967800	, 18.88557700	, 19.91962200	, 20.79478900,	21.03750800	, 59.67634500	, 80.29510500 ,	126.24256000]
         
         ;file_name
-        file_out=file_out1+time_rsp+file_out2
+        file_out=file_out1[idate]+time_rsp+file_out2[idate]
         
         IF ~KEYWORD_SET(switch_no_talk)THEN print,'Writing output file:',path_out+file_out
         ;open file output file
