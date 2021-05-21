@@ -106,7 +106,7 @@ PACE_HARP2_L1C_dims=read_csv(path_PACE_structure_file+'Dimensions.csv',N_TABLE_H
 PACE_HARP2_L1C_folders=read_csv(path_PACE_structure_file+'Folders.csv',N_TABLE_HEADER=1,TABLE_HEADER=folders_header)
 PACE_HARP2_L1C_vars=read_csv(path_PACE_structure_file+'Variables.csv',N_TABLE_HEADER=1,TABLE_HEADER=var_header)
 var_fields=STRSPLIT(var_header,',',/EXTRACT)
-;PACE_HARP2_L1C_attr=read_csv(path_PACE_structure_file+'Global_attributes.csv',N_TABLE_HEADER=1,TABLE_HEADER=attr_header)
+PACE_HARP2_L1C_attr=read_csv(path_PACE_structure_file+'Global_attributes.csv',N_TABLE_HEADER=1,TABLE_HEADER=attr_header)
 
 pointer_dim1=where(var_fields eq 'VAR_DIM_POINTER1')
 pointer_ndim=where(var_fields eq 'VAR_NDIMS')
@@ -154,7 +154,7 @@ FOR idate=0,ndates-1 DO BEGIN
         IF ~KEYWORD_SET(switch_no_talk)THEN print,'Reading RSP data: ',path_date+file_RSP
         data_RSP=h5_PARSE(path_date+file_RSP,/READ_DATA)
         bands_FWHM=[25.52821700	, 19.16967800	, 18.88557700	, 19.91962200	, 20.79478900,	21.03750800	, 59.67634500	, 80.29510500 ,	126.24256000]
-        
+
         ;file_name
         file_out=file_out1[idate]+time_rsp+file_out2[idate]
         
@@ -231,15 +231,16 @@ FOR idate=0,ndates-1 DO BEGIN
         datetime=STRING(DY,DM,DD,TH,TM,TS,FORMAT='(I4,"-",I2.2,"-",I2.2,"T",I2.2,":",I2.2,":",I2.2,"Z")')
         NCDF_ATTPUT,id,/global,'date_created',datetime
         
-        NCDF_ATTPUT,id,/global,'title','RSP data in format of PACE HARP-2 Level-1C Data'
-        NCDF_ATTPUT,id,/global,'institution','NASA GISS'
         NCDF_ATTPUT,id,/global,'instrument',data_RSP.INSTRUMENT._data
         NCDF_ATTPUT,id,/global,'sun_earth_distance',data_RSP.Platform.Solar_distance._data[0]
         NCDF_ATTPUT,id,/global,'time_coverage_start',data_RSP.START_UTC._data
         NCDF_ATTPUT,id,/global,'time_coverage_end',data_RSP.START_UTC._data
-        NCDF_ATTPUT,id,/global,'project','PACE'
+        NCDF_ATTPUT,id,/global,'product_name',file_out
 
-        
+        FOR iattr=0,N_elements(PACE_HARP2_L1C_attr.(0))-1 DO $
+            NCDF_ATTPUT,id,/global,PACE_HARP2_L1C_attr.(0)[iattr],PACE_HARP2_L1C_attr.(1)[iattr]
+    ;FOR iattr=0,N_elements(PACE_HARP2_L1C_attr.(0))-1 DO print,PACE_HARP2_L1C_attr.(0)[iattr],PACE_HARP2_L1C_attr.(1)[iattr]
+
         ; go through variables and write RSP data
                 
         ;view_time nadir
@@ -270,8 +271,12 @@ FOR idate=0,ndates-1 DO BEGIN
             istart=data_RSP.Data.Unvignetted_Sector_begin._data
             iend=data_RSP.Data.Unvignetted_Sector_end._data
             diff=(data_RSP.Geometry.Measurement_Time._data[istart:iend, ipix, 0]-data_RSP.Geometry.Measurement_Time._data[Nadir_index, ipix, 0])*86400.
+            icheckfill=where(ABS(diff) gt 1e4,nfill)
+            IF(nfill gt 0)THEN diff[icheckfill]=-999.
             dataput[*,0,ipix]=diff
+            
         ENDFOR
+        
         NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
         
         ;attributes to bin_attributes group
