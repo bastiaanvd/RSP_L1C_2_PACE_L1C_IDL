@@ -1,32 +1,18 @@
 GLOBAL_ATTRIBUTES_NAMES,GLOBAL_ATTRIBUTES_VALUES
-title,PACE HARP2 Level-1C Data
-instrument,HARP2
+title,RSP L1C data in format of PACE HARP-2 Level-1C Data
 processing_version,V1.0
 Conventions,CF-1.6
-institution,"NASA Goddard Space Flight Center, Ocean Biology Processing Group"
+institution,NASA Goddard Institute for Space Studies
 license,http://science.nasa.gov/earth-science/earth-science-data/data-information-policy/
 naming_authority,gov.nasa.gsfc.sci.oceancolor
-keywords_vocabulary,NASA Global Change Master Directory (GCMD) Science Keywords
-stdname_vocabulary,NetCDF Climate and Forecast (CF) Metadata Convention
-creator_name,NASA/GSFC
-creator_email,data@oceancolor.gsfc.nasa.gov
-creator_url,http://oceancolor.gsfc.nasa.gov
+creator_name,"Bastiaan van Diedenhoven (formerly GISS, now SRON); Brian Cairns (GISS); Andrzej Wasilewski (GISS)"
+creator_email,andrzej.p.wasilewski@nasa.gov
+creator_url,https://data.giss.nasa.gov/pub/rsp/
 project,PACE Project
-publisher_name,NASA/GSFC
-publisher_email,data@oceancolor.gsfc.nasa.gov
-publisher_url,http://oceancolor.gsfc.nasa.gov
 processing_level,L1C
 cdm_data_type,swath
-orbit_number,12345
-history,
-terrain_data_source,
-spectral_response_function,
-systematic_uncertainty_model,
 CDL_version_date,2/28/20
-product_name,PACE_HARP2.20220301T123621.L1C.5.2km.nc
-startDirection,Descending
-endDirection,Ascending
-sun_earth_distance,0.99084904
-time_coverage_start,2022-03-01T12:36:21Z
-time_coverage_end,2022-03-01T13:26:57Z
-date_created,2020-03-05T15:12:41Z
+RSP_note1,RSP is an instrument that can be mounted on several high and low-flying aircraft.
+RSP_note2,RSP measures along the aricraft track only and has no swath. Hence swath width in these files is equal to 1
+RSP_note3,Flights are divided into individual legs for which the aircraft is flying in a relatively straight path 
+RSP_note4,"For RSP specific information and data, including aircraft altitude, cloud mask, quality flags, water vapor columns, please see the RSP_specific_variables folder "
