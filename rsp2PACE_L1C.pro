@@ -237,10 +237,10 @@ FOR idate=0,ndates-1 DO BEGIN
         NCDF_ATTPUT,id,/global,'time_coverage_end',data_RSP.START_UTC._data
         NCDF_ATTPUT,id,/global,'product_name',file_out
 
+        ;write global attributes from the .csv file
         FOR iattr=0,N_elements(PACE_HARP2_L1C_attr.(0))-1 DO $
             NCDF_ATTPUT,id,/global,PACE_HARP2_L1C_attr.(0)[iattr],PACE_HARP2_L1C_attr.(1)[iattr]
-    ;FOR iattr=0,N_elements(PACE_HARP2_L1C_attr.(0))-1 DO print,PACE_HARP2_L1C_attr.(0)[iattr],PACE_HARP2_L1C_attr.(1)[iattr]
-
+ 
         ; go through variables and write RSP data
                 
         ;view_time nadir
