@@ -12,6 +12,7 @@ project,PACE Project
 processing_level,L1C
 cdm_data_type,swath
 CDL_version_date,2/28/20
+bin_size_at_nadir,14mrad
 RSP_note1,RSP is an instrument that can be mounted on several high and low-flying aircraft.
 RSP_note2,RSP measures along the aricraft track only and has no swath. Hence swath width in these files is equal to 1
 RSP_note3,Flights are divided into individual legs for which the aircraft is flying in a relatively straight path 
