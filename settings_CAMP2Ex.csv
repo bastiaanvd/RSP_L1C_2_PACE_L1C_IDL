@@ -1,2 +1,2 @@
 ﻿Date,path to RSP data,part of path before date,part of path after date,path out,file out prefix,file out end,path to PACE structure file
-20191010,/Users/bvandied/CAMP2Ex/DATA/L1C_V003/,RSP1_,_L1C_V003,../RSP2PACE_DATA/CAMP2Ex/,PACE_RSP.,.L1C.100m.nc,./DATA_STRUCTURE/
+20191010,/Users/bvandied/CAMP2Ex/DATA/L1C_V003/,RSP1_,_L1C_V003,../RSP2PACE_DATA/CAMP2Ex/,CAMP2Ex_RSP.,.L1C.100m.nc,./DATA_STRUCTURE/
