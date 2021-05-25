@@ -236,11 +236,13 @@ FOR idate=0,ndates-1 DO BEGIN
         NCDF_ATTPUT,id,/global,'time_coverage_start',data_RSP.START_UTC._data
         NCDF_ATTPUT,id,/global,'time_coverage_end',data_RSP.START_UTC._data
         NCDF_ATTPUT,id,/global,'product_name',file_out
+        NCDF_ATTPUT,id,/global,'nadir_bin',MEDIAN(data_RSP.GEOMETRY.NADIR_INDEX._data[*,0]),/SHORT
 
         ;write global attributes from the .csv file
         FOR iattr=0,N_elements(PACE_HARP2_L1C_attr.(0))-1 DO $
             NCDF_ATTPUT,id,/global,PACE_HARP2_L1C_attr.(0)[iattr],PACE_HARP2_L1C_attr.(1)[iattr]
  
+
         ; go through variables and write RSP data
                 
         ;view_time nadir
@@ -279,9 +281,6 @@ FOR idate=0,ndates-1 DO BEGIN
         
         NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
         
-        ;attributes to bin_attributes group
-        NCDF_ATTPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],'bin_size_at_nadir',0.1D,/DOUBLE,/GLOBAL
-        NCDF_ATTPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],'nadir_bin',0,/SHORT,/GLOBAL
         
         
         ;alt, lat, lon
