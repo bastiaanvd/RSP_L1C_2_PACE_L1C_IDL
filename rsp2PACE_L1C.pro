@@ -327,7 +327,7 @@ FOR idate=0,ndates-1 DO BEGIN
         RSP_vars=['VIEWING_AZIMUTH','VIEWING_ZENITH']
         convert2=[1.,-1.]
         
-        nmap=n_elements(pace_var_map)
+        nmap=n_elements(pace_vars)
         FOR imap=0,nmap-1 DO BEGIN
             ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars[imap])
             ivar=ivar[0] 
@@ -351,7 +351,7 @@ FOR idate=0,ndates-1 DO BEGIN
         ;intensity_wavelengths and polarization_wavelengths        
         pace_vars=['intensity_wavelengths','polarization_wavelengths']
         RSP_vars=['WAVELENGTH','WAVELENGTH']
-        nmap=n_elements(pace_var_map)
+        nmap=n_elements(pace_vars)
         
         FOR imap=0,nmap-1 DO BEGIN
             ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars[imap])
@@ -370,7 +370,7 @@ FOR idate=0,ndates-1 DO BEGIN
         
         ;intensity__bandpasses and polarization__bandpasses (FWHM?)
         pace_vars=['intensity_bandpasses','polarization_bandpasses']
-        nmap=n_elements(pace_var_map)
+        nmap=n_elements(pace_vars)
         FOR imap=0,nmap-1 DO BEGIN
             ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars[imap])
             ivar=ivar[0] 
@@ -387,7 +387,7 @@ FOR idate=0,ndates-1 DO BEGIN
         ;solar F0
         pace_vars=['intensity_F0','polarization_F0']
         RSP_vars=['SOLAR_CONSTANT','SOLAR_CONSTANT']
-        nmap=n_elements(pace_var_map)
+        nmap=n_elements(pace_vars)
         FOR imap=0,nmap-1 DO BEGIN
             ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars[imap])
             ivar=ivar[0] 
@@ -398,8 +398,9 @@ FOR idate=0,ndates-1 DO BEGIN
             dataput=MAKE_ARRAY(dim_ivar,/FLOAT)
             FOR iview=0,dimensions_rsp.number_of_views-1 DO dataput[*,iview]=data_RSP.CALIBRATION.(rsp_var_map)._data/scale_factor[ivar]+Add_offset[ivar]
             NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
+
         ENDFOR
-        
+    
         ;obs_per_view
         ; just fill with 1
         pace_vars='obs_per_view'
