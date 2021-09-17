@@ -324,7 +324,7 @@ FOR idate=0,ndates-1 DO BEGIN
         ENDFOR
         
         
-        ;viewing geometry        
+        ;viewing geometry and scattering angle
         pace_vars=['sensor_azimuth','sensor_zenith','scattering_angle']
         RSP_vars=['VIEWING_AZIMUTH','VIEWING_ZENITH','SCATTERING_ANGLE']
         convert2=[1.,-1.,1.]
