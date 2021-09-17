@@ -40,11 +40,11 @@
 ; :Author:
 ;    Bastiaan van Diedenhoven   
 ;    Research Scientist
-;    Columbia University Center for Climate System Research & NASA GISS
-;    2880 Broadway
-;    New York, NY 10025
-;    Tel: +1 212 678 5512
-;    Email: bv2154@columbia.edu & bvandiedenhoven@gmail.com
+;    SRON Netherlands Institute for Space Research
+;    Niels Bohrweg 4
+;    Leiden
+;    Tel: --
+;    Email: b.van.diedenhoven@sron.nl & bvandiedenhoven@gmail.com
 ;
 ; :History:
 ;     original created: 1 September 2020
@@ -52,6 +52,8 @@
 ;     10 December 2020: corrected solar constant definition and units
 ;     19 February 2021: Recoded for more flexibility; should now work on any current RSP L1C data 
 ;     10 March 2021: added setting.csv file 
+;     17 September 2021: updated contact info
+;     17 September 2021: added scattering angle
 ;
 ;
 ; :Notes
@@ -323,10 +325,11 @@ FOR idate=0,ndates-1 DO BEGIN
         
         
         ;viewing geometry        
-        pace_vars=['sensor_azimuth','sensor_zenith']
-        RSP_vars=['VIEWING_AZIMUTH','VIEWING_ZENITH']
-        convert2=[1.,-1.]
-        
+        pace_vars=['sensor_azimuth','sensor_zenith','scattering_angle']
+        RSP_vars=['VIEWING_AZIMUTH','VIEWING_ZENITH','SCATTERING_ANGLE']
+        convert2=[1.,-1.,1.]
+        flip180=[0.,1.,0.]
+
         nmap=n_elements(pace_vars)
         FOR imap=0,nmap-1 DO BEGIN
             ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars[imap])
@@ -342,7 +345,7 @@ FOR idate=0,ndates-1 DO BEGIN
             FOR ipix=0,bins_along_track-1 DO BEGIN
                 istart=data_RSP.Data.Unvignetted_Sector_begin._data
                 iend=data_RSP.Data.Unvignetted_Sector_end._data
-                dataput[*,0,ipix]=((FLOAT(imap)*180.)+convert2[imap]*data_RSP.GEOMETRY.(rsp_var_map)._data[istart:iend,ipix,0])/scale_factor[ivar]+Add_offset[ivar]
+                dataput[*,0,ipix]=((flip180[imap]*180.)+convert2[imap]*data_RSP.GEOMETRY.(rsp_var_map)._data[istart:iend,ipix,0])/scale_factor[ivar]+Add_offset[ivar]
             ENDFOR
              NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
         ENDFOR
