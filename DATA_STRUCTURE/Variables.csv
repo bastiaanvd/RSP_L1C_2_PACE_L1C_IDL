@@ -16,6 +16,7 @@ sensor_azimuth,INT,2,3,0,4,3,-1,7,long_name,units,_fillvalue,valid_min,valid_max
 sensor_zenith,INT,2,3,0,4,3,-1,7,long_name,units,_fillvalue,valid_min,valid_max,scale_factor,add_offset,Sensor zenith angles at bin locations,degrees,-32768,0,18000,0.01,0
 solar_azimuth,INT,2,2,4,3,-1,-1,7,long_name,units,_fillvalue,valid_min,valid_max,scale_factor,add_offset,Solar azimuth angle at bin locations,degrees,-32768,-18000,18000,0.01,0
 solar_zenith,INT,2,2,4,3,-1,-1,7,long_name,units,_fillvalue,valid_min,valid_max,scale_factor,add_offset,Solar zenith angle at bin locations,degrees,-32768,0,18000,0.01,0
+scattering_angle,INT,2,3,0,4,3,-1,7,long_name,units,_fillvalue,valid_min,valid_max,scale_factor,add_offset,Scattering angles at bin locations,degrees,-32768,0,18000,0.01,0
 obs_per_view,INT,3,3,0,4,3,-1,3,long_name,valid_min,valid_max,,,,,Observations contributing to bin from each view,0,999,,,,
 I,FLOAT,3,4,1,0,4,3,5,long_name,units,_fillvalue,valid_min,valid_max,,,I Stokes vector component,W m^-2 sr^-1 um^-1,-999,0,999,,
 I_noise,FLOAT,3,4,1,0,4,3,5,long_name,units,_fillvalue,valid_min,valid_max,,,Random noise of I in bin,W m^-2 sr^-1 um^-1,-999,0,800,,
