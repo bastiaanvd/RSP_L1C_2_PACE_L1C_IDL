@@ -302,33 +302,33 @@ FOR idate=0,ndates-1 DO BEGIN
         ENDFOR
         
         
-        ;solar geometry
-        pace_vars=['solar_azimuth','solar_zenith']
-        RSP_vars=['SOLAR_AZIMUTH','SOLAR_ZENITH']
-        nmap=n_elements(RSP_vars)
-        FOR imap=0,nmap-1 DO BEGIN
-            ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars[imap])
-            ivar=ivar[0] 
-            rsp_var_map=where(TAG_NAMES(data_RSP.GEOMETRY) eq RSP_vars[imap])
-            dim_ivar=dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1)[ivar])
+        ; ;solar geometry
+        ; pace_vars=['solar_azimuth','solar_zenith']
+        ; RSP_vars=['SOLAR_AZIMUTH','SOLAR_ZENITH']
+        ; nmap=n_elements(RSP_vars)
+        ; FOR imap=0,nmap-1 DO BEGIN
+        ;     ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars[imap])
+        ;     ivar=ivar[0] 
+        ;     rsp_var_map=where(TAG_NAMES(data_RSP.GEOMETRY) eq RSP_vars[imap])
+        ;     dim_ivar=dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1)[ivar])
             
-            IF(PACE_HARP2_L1C_vars.(pointer_ndim)[ivar] gt 1)THEN $
-                FOR idim=1,PACE_HARP2_L1C_vars.(pointer_ndim)[ivar]-1 DO dim_ivar=[dim_ivar,dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1+idim)[ivar])]
+        ;     IF(PACE_HARP2_L1C_vars.(pointer_ndim)[ivar] gt 1)THEN $
+        ;         FOR idim=1,PACE_HARP2_L1C_vars.(pointer_ndim)[ivar]-1 DO dim_ivar=[dim_ivar,dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1+idim)[ivar])]
         
-            dataput=MAKE_ARRAY(dim_ivar,/INTEGER)
-            FOR ipix=0,bins_along_track-1 DO BEGIN
-                Nadir_index=data_RSP.Geometry.Nadir_index._data[ipix,0]
-                dataput[0,ipix]=data_RSP.GEOMETRY.(rsp_var_map)._data[Nadir_index,ipix,0]/scale_factor[ivar]+Add_offset[ivar] 
-            ENDFOR
-            NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
-        ENDFOR
+        ;     dataput=MAKE_ARRAY(dim_ivar,/INTEGER)
+        ;     FOR ipix=0,bins_along_track-1 DO BEGIN
+        ;         Nadir_index=data_RSP.Geometry.Nadir_index._data[ipix,0]
+        ;         dataput[0,ipix]=data_RSP.GEOMETRY.(rsp_var_map)._data[Nadir_index,ipix,0]/scale_factor[ivar]+Add_offset[ivar] 
+        ;     ENDFOR
+        ;     NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
+        ; ENDFOR
         
         
         ;viewing geometry and scattering angle
-        pace_vars=['sensor_azimuth','sensor_zenith','scattering_angle']
-        RSP_vars=['VIEWING_AZIMUTH','VIEWING_ZENITH','SCATTERING_ANGLE']
-        convert2=[1.,-1.,1.]
-        flip180=[0.,1.,0.]
+        pace_vars=['sensor_azimuth','sensor_zenith','scattering_angle','solar_azimuth','solar_zenith']
+        RSP_vars=['VIEWING_AZIMUTH','VIEWING_ZENITH','SCATTERING_ANGLE','SOLAR_AZIMUTH','SOLAR_ZENITH']
+        convert2=[1.,-1.,1.,1.,1.]
+        flip180=[0.,1.,0.,0.,0.]
 
         nmap=n_elements(pace_vars)
         FOR imap=0,nmap-1 DO BEGIN
