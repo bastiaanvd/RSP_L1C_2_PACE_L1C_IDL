@@ -55,7 +55,7 @@
 ;     17 September 2021: updated contact info
 ;     17 September 2021: added scattering angle
 ;     21 December 2022: corrected application of offset and scale factors
-;
+;     21 December 2022: added bins_across_track_copy to copy RSP data to emulate swath 
 ;
 ; :Notes
 ;       Uses H5_PARSE to open RSP hdf5 files
@@ -97,7 +97,7 @@ path_out=STRCOMPRESS(settings.field5,/REMOVE_ALL)
 file_out1=STRCOMPRESS(settings.field6,/REMOVE_ALL)
 file_out2=STRCOMPRESS(settings.field7,/REMOVE_ALL)
 path_PACE_structure_file=STRCOMPRESS(settings.field8[0],/REMOVE_ALL)
-
+bins_across_track_copy=FIX(settings.field9[0])
 
 ;---------------------------------
 ;start of code
@@ -170,7 +170,7 @@ FOR idate=0,ndates-1 DO BEGIN
         intensity_bands_per_view    = data_RSP.dim_bands._nelements
         polarization_bands_per_view = intensity_bands_per_view
         bins_along_track            = data_RSP.dim_scans._nelements
-        bins_across_track           = 1
+        bins_across_track           = bins_across_track_copy
         
         dimensions_rsp = {number_of_views:number_of_views,intensity_bands_per_view:intensity_bands_per_view,polarization_bands_per_view:polarization_bands_per_view,bins_along_track:bins_along_track,bins_across_track:bins_across_track}
         ndims=n_elements(PACE_HARP2_L1C_dims.(0))
@@ -278,7 +278,7 @@ FOR idate=0,ndates-1 DO BEGIN
             diff=(data_RSP.Geometry.Measurement_Time._data[istart:iend, ipix, 0]-data_RSP.Geometry.Measurement_Time._data[Nadir_index, ipix, 0])*86400.
             icheckfill=where(ABS(diff) gt 1e4,nfill)
             IF(nfill gt 0)THEN diff[icheckfill]=-999.
-            dataput[*,0,ipix]=diff
+            FOR ibin_accross_track=0,bins_across_track-1 DO dataput[*,ibin_accross_track,ipix]=diff
             
         ENDFOR
         
@@ -298,7 +298,7 @@ FOR idate=0,ndates-1 DO BEGIN
             IF(PACE_HARP2_L1C_vars.(pointer_ndim)[ivar] gt 1)THEN $
                 FOR idim=1,PACE_HARP2_L1C_vars.(pointer_ndim)[ivar]-1 DO dim_ivar=[dim_ivar,dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1+idim)[ivar])]
             dataput=MAKE_ARRAY(dim_ivar,/FLOAT)
-            dataput[0,*]=(data_RSP.GEOMETRY.(rsp_var_map)._data[*,0]-Add_offset[ivar])/scale_factor[ivar]
+            FOR ibin_accross_track=0,bins_across_track-1 DO dataput[ibin_accross_track,*]=(data_RSP.GEOMETRY.(rsp_var_map)._data[*,0]-Add_offset[ivar])/scale_factor[ivar]
             NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
         ENDFOR
         
@@ -329,7 +329,7 @@ FOR idate=0,ndates-1 DO BEGIN
             FOR ipix=0,bins_along_track-1 DO BEGIN
                 istart=data_RSP.Data.Unvignetted_Sector_begin._data
                 iend=data_RSP.Data.Unvignetted_Sector_end._data
-                dataput[*,0,ipix]=(((flip180[imap]*180.)+convert2[imap]*data_RSP.GEOMETRY.(rsp_var_map)._data[istart:iend,ipix,0])-Add_offset[ivar])/scale_factor[ivar]
+                FOR ibin_accross_track=0,bins_across_track-1 DO dataput[*,ibin_accross_track,ipix]=(((flip180[imap]*180.)+convert2[imap]*data_RSP.GEOMETRY.(rsp_var_map)._data[istart:iend,ipix,0])-Add_offset[ivar])/scale_factor[ivar]
             ENDFOR
              NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
         ENDFOR
@@ -353,7 +353,7 @@ FOR idate=0,ndates-1 DO BEGIN
             FOR ipix=0,bins_along_track-1 DO BEGIN
                 istart=data_RSP.Data.Unvignetted_Sector_begin._data
                 iend=data_RSP.Data.Unvignetted_Sector_end._data
-                dataput[*,0,ipix]=data_RSP.GEOMETRY.(rsp_var_map)._data[istart:iend,ipix,0]
+                FOR ibin_accross_track=0,bins_across_track-1 DO dataput[*,ibin_accross_track,ipix]=data_RSP.GEOMETRY.(rsp_var_map)._data[istart:iend,ipix,0]
             ENDFOR
              NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
         ENDFOR
@@ -434,7 +434,7 @@ FOR idate=0,ndates-1 DO BEGIN
                 iend=data_RSP.Data.Unvignetted_Sector_end._data
                 I_avg=((data_RSP.data.intensity_1._data[*,istart:iend,ipix]+data_RSP.data.intensity_2._data[*,istart:iend,ipix])/2.)
                 For iwl=0,data_RSP.dim_bands._nelements-1 DO I_avg[iwl,*]=(I_avg[iwl,*]*data_RSP.calibration.solar_constant._data[iwl]/!PI-Add_offset[ivar])/scale_factor[ivar]
-                dataput[*,*,0,ipix]=I_avg
+                FOR ibin_accross_track=0,bins_across_track-1 DO dataput[*,*,ibin_accross_track,ipix]=I_avg
         ENDFOR
         NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
         
@@ -455,7 +455,7 @@ FOR idate=0,ndates-1 DO BEGIN
                     iend=data_RSP.Data.Unvignetted_Sector_end._data
                     QU=data_RSP.data.(rsp_var_map)._data[*,istart:iend,ipix]
                     For iwl=0,data_RSP.dim_bands._nelements-1 DO QU[iwl,*]=(QU[iwl,*]*data_RSP.calibration.solar_constant._data[iwl]/!PI-Add_offset[ivar])/scale_factor[ivar]
-                    dataput[*,*,0,ipix]=QU
+                    FOR ibin_accross_track=0,bins_across_track-1 DO dataput[*,*,ibin_accross_track,ipix]=QU
             ENDFOR
             NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
         ENDFOR
@@ -472,7 +472,7 @@ FOR idate=0,ndates-1 DO BEGIN
                 istart=data_RSP.Data.Unvignetted_Sector_begin._data
                 iend=data_RSP.Data.Unvignetted_Sector_end._data
                 Dolp1=data_RSP.Data.DOLP._data[*,istart:iend,ipix]/100.
-                dataput[*,*,0,ipix]=(Dolp1-Add_offset[ivar])/scale_factor[ivar]
+                FOR ibin_accross_track=0,bins_across_track-1 DO dataput[*,*,ibin_accross_track,ipix]=(Dolp1-Add_offset[ivar])/scale_factor[ivar]
         ENDFOR
         NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
 
