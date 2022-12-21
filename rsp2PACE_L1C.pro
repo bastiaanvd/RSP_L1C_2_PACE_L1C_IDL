@@ -54,7 +54,7 @@
 ;     10 March 2021: added setting.csv file 
 ;     17 September 2021: updated contact info
 ;     17 September 2021: added scattering angle
-;       21 December 2022: corrected application of offset and scale factors
+;     21 December 2022: corrected application of offset and scale factors
 ;
 ;
 ; :Notes
