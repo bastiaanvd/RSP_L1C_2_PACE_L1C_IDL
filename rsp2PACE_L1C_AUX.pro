@@ -246,8 +246,8 @@ FOR idate=0,ndates-1 DO BEGIN
         ENDFOR
         
         ;cth
-        pace_vars=['cth_water_cloud']
-        RSP_vars=['CLOUD_TOP_ALTITUDE']
+        pace_vars=['cth_water_cloud','cth_ice_cloud']
+        RSP_vars=['CLOUD_TOP_ALTITUDE','CLOUD_TOP_ALTITUDE']
         nmap=n_elements(RSP_vars)
         FOR imap=0,nmap-1 DO BEGIN
             ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars[imap])
@@ -283,7 +283,7 @@ FOR idate=0,ndates-1 DO BEGIN
             ENDFOR
             NCDF_VARPUT,group_id,var_id[ivar],dataput
         ENDFOR
-
+        ;ice cloud fraction for now is filled with 0.
 
         ;cer and cot
         pace_vars=['cer_21_water_cloud','cot_21_water_cloud']
