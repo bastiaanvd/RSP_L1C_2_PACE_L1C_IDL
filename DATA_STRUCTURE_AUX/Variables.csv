@@ -1,0 +1,7 @@
+VAR_NAMES,VAR_TYPE,FOLDER,VAR_NDIMS,VAR_DIM_POINTER1,VAR_DIM_POINTER2,VAR_DIM_POINTER3,VAR_DIM_POINTER4,VAR_NATTRIBUTES,VAR_ATTRIBUTE_NAME1,VAR_ATTRIBUTE_NAME2,VAR_ATTRIBUTE_NAME3,VAR_ATTRIBUTE_NAME4,VAR_ATTRIBUTE_NAME5,VAR_ATTRIBUTE_NAME6,VAR_ATTRIBUTE_NAME7,VAR_ATTRIBUTE_VALUE1,VAR_ATTRIBUTE_VALUE2,VAR_ATTRIBUTE_VALUE3,VAR_ATTRIBUTE_VALUE4,VAR_ATTRIBUTE_VALUE5,VAR_ATTRIBUTE_VALUE6,VAR_ATTRIBUTE_VALUE7
+cer_21_water_cloud,FLOAT,-1,2,1,0,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,NA,NA,RSP: Cloud Particle Effective Radius two-channel retrieval using the 2.25 um band ,micron,-999,0,50,,
+cot_21_water_cloud,FLOAT,-1,2,1,0,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,NA,NA,RSP: Cloud optical thickness using polarimetric retrievals,none,-999,0,250,,
+cth_water_cloud,FLOAT,-1,2,1,0,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,NA,NA,RSP: Cloud top height using multi-angle stereo,kilometers,-999,0,20,,
+water_cloud_fraction,FLOAT,-1,2,1,0,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,NA,NA,RSP: Water cloud fraction. 0 for no cloud or 1 for water cloud,kilometers,-999,0,1,,
+latitude,FLOAT,-1,2,1,0,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,NA,NA,latitude,degrees,-999,-180,180,,
+longitude,FLOAT,-1,2,1,0,-1,-1,5,long_name,units,_fillvalue,valid_min,valid_max,NA,NA,longitude,degrees,-999,-180,180,,
