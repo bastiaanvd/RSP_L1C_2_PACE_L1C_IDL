@@ -312,7 +312,7 @@ FOR idate=0,ndates-1 DO BEGIN
         NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
         
         ;alt, lat, lon
-        pace_vars=['altitude','latitude','longitude']
+        pace_vars=['height','height','longitude']
         RSP_vars=['COLLOCATED_ALTITUDE','COLLOCATED_LATITUDE','COLLOCATED_LONGITUDE']
         nmap=n_elements(RSP_vars)
         FOR imap=0,nmap-1 DO BEGIN
@@ -330,9 +330,9 @@ FOR idate=0,ndates-1 DO BEGIN
         
         
         ;viewing geometry and scattering angle and solar geometry 
-        pace_vars=['sensor_azimuth','sensor_zenith',$ 
+        pace_vars=['sensor_azimuth_angle','sensor_zenith_angle',$ 
             'scattering_angle',$    
-            'solar_azimuth','solar_zenith']
+            'solar_azimuth_angle','solar_zenith_angle']
         RSP_vars=['VIEWING_AZIMUTH','VIEWING_ZENITH',$ 
             'SCATTERING_ANGLE',$
             'SOLAR_AZIMUTH','SOLAR_ZENITH']
@@ -368,41 +368,43 @@ FOR idate=0,ndates-1 DO BEGIN
              NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
         ENDFOR
 
-        ;rotation factors
-        pace_vars=['cos_rot_scatt_plane','sin_rot_scatt_plane']
-        RSP_vars=['COS_ROT_SCATT_PLANE','SIN_ROT_SCATT_PLANE']
-        nmap=n_elements(pace_vars)
-        FOR imap=0,nmap-1 DO BEGIN
-            ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars[imap])
-            ivar=ivar[0] 
+
+        pace_vars='rotation_angle'
+        nmap=n_elements(pace_vars)       
+        ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars)
+        ivar=ivar[0] 
+        dim_ivar=dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1)[ivar])
+
+        FOR idim=1,PACE_HARP2_L1C_vars.(pointer_ndim)[ivar]-1 DO dim_ivar=[dim_ivar,dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1+idim)[ivar])]
+        dataput=MAKE_ARRAY(dim_ivar,/float)
         
-            rsp_var_map=where(TAG_NAMES(data_RSP.GEOMETRY) eq RSP_vars[imap])
-            dim_ivar=dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1)[ivar])
-            
-            IF(PACE_HARP2_L1C_vars.(pointer_ndim)[ivar] gt 1)THEN $
-                FOR idim=1,PACE_HARP2_L1C_vars.(pointer_ndim)[ivar]-1 DO dim_ivar=[dim_ivar,dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1+idim)[ivar])]
-             
-             dataput=MAKE_ARRAY(dim_ivar,/FLOAT)
-            FOR ipix=0,bins_along_track-1 DO BEGIN
+        FOR ipix=0,bins_along_track-1 DO BEGIN
 
-                dataput1=data_RSP.GEOMETRY.(rsp_var_map)._data[istart:iend,ipix,0]
-                dataput_harp=dblarr(number_of_views)
-                i1=0
-                for iwl=0,number_of_rsp_bands-1 DO BEGIN 
-                    views_select_wl=where(views_select[iwl,*] eq 1,number_of_views_wl) 
-                    i2=i1+number_of_views_wl-1
-                    dataput_harp[i1:i2]=dataput1[views_select_wl]
-                    i1=i2+1
-                endfor
+            COS_ROT_SCATT_PLANE=data_RSP.GEOMETRY.COS_ROT_SCATT_PLANE._data[istart:iend,ipix,0]
+            SIN_ROT_SCATT_PLANE=data_RSP.GEOMETRY.SIN_ROT_SCATT_PLANE._data[istart:iend,ipix,0]
+            Sigma=0.5 * ATAN( SIN_Rot_Scatt_Plane, COS_Rot_Scatt_Plane)
 
-                FOR ibin_accross_track=0,bins_across_track-1 DO dataput[*,ibin_accross_track,ipix]=dataput_harp
-            ENDFOR
-             NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
+            dataput1=Sigma/!dtor
+            ifill=where(COS_ROT_SCATT_PLANE eq -999 or SIN_ROT_SCATT_PLANE eq -999,nfill)
+            IF(nfill ne 0)THEN  dataput1[ifill]=-999
+            dataput_harp=dblarr(number_of_views)
+            i1=0
+            for iwl=0,number_of_rsp_bands-1 DO BEGIN 
+                views_select_wl=where(views_select[iwl,*] eq 1,number_of_views_wl) 
+                i2=i1+number_of_views_wl-1
+                dataput_harp[i1:i2]=dataput1[views_select_wl]
+                i1=i2+1
+            endfor
+
+            FOR ibin_accross_track=0,bins_across_track-1 DO dataput[*,ibin_accross_track,ipix]=dataput_harp
         ENDFOR
+        NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
+    
+
 
         
         ;intensity_wavelengths and polarization_wavelengths        
-        pace_vars=['intensity_wavelengths','polarization_wavelengths']
+        pace_vars=['intensity_wavelength','polarization_wavelength']
         RSP_vars=['WAVELENGTH','WAVELENGTH']
         nmap=n_elements(pace_vars)
         
@@ -431,7 +433,7 @@ FOR idate=0,ndates-1 DO BEGIN
 
 
         ;intensity__bandpasses and polarization__bandpasses (FWHM?)
-        pace_vars=['intensity_bandpasses','polarization_bandpasses']
+        pace_vars=['intensity_bandpass','polarization_bandpass']
         nmap=n_elements(pace_vars)
         FOR imap=0,nmap-1 DO BEGIN
             ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars[imap])
@@ -456,7 +458,7 @@ FOR idate=0,ndates-1 DO BEGIN
         
         
         ;solar F0
-        pace_vars=['intensity_F0','polarization_F0']
+        pace_vars=['intensity_f0','polarization_f0']
         RSP_vars=['SOLAR_CONSTANT','SOLAR_CONSTANT']
         nmap=n_elements(pace_vars)
         FOR imap=0,nmap-1 DO BEGIN
@@ -485,7 +487,7 @@ FOR idate=0,ndates-1 DO BEGIN
     
         ;obs_per_view
         ; just fill with 1
-        pace_vars='obs_per_view'
+        pace_vars='number_of_observations'
         ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars)
         ivar=ivar[0] 
         dim_ivar=dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1)[ivar])
@@ -494,7 +496,7 @@ FOR idate=0,ndates-1 DO BEGIN
         NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
         
         ;intensity
-        pace_vars='I'
+        pace_vars='i'
         ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars)
         ivar=ivar[0]         
         dim_ivar=dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1)[ivar])
@@ -524,7 +526,7 @@ FOR idate=0,ndates-1 DO BEGIN
         NCDF_VARPUT,group_id[PACE_HARP2_L1C_vars.(pointer_folder)[ivar]],var_id[ivar],dataput
         
         ;Q and U
-        pace_vars=['Q','U']
+        pace_vars=['q','u']
         RSP_vars=['STOKES_Q','STOKES_U']
         nmap=n_elements(RSP_vars)
         FOR imap=0,nmap-1 DO BEGIN
@@ -561,7 +563,7 @@ FOR idate=0,ndates-1 DO BEGIN
         ENDFOR
         
         ;DoLP
-        pace_vars='DOLP'
+        pace_vars='dolp'
         ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars)
         ivar=ivar[0] 
         dim_ivar=dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1)[ivar])
@@ -615,7 +617,7 @@ FOR idate=0,ndates-1 DO BEGIN
         NVARIABLES=n_elements(rsp_vars)
         var_id_rsp=LONARR(NVARIABLES)
         
-        pace_dimensions='altitude'; used to get dimensions...
+        pace_dimensions='height'; used to get dimensions...
         ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_dimensions)
         ivar=ivar[0]        
         ndims=PACE_HARP2_L1C_vars.(pointer_ndim)[ivar]         

@@ -302,6 +302,40 @@ FOR idate=0,ndates-1 DO BEGIN
             NCDF_VARPUT,group_id,var_id[ivar],dataput
         ENDFOR
 
+        ;ctt 
+        pace_vars=['ctt_water_cloud']
+        RSP_vars=['CLOUD_TOP_TEMPERATURE']
+        nmap=n_elements(RSP_vars)
+        FOR imap=0,nmap-1 DO BEGIN
+            ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars[imap])
+            ivar=ivar[0]
+            rsp_var_map=where(TAG_NAMES(data_RSP.DATA) eq RSP_vars[imap])
+            dim_ivar=dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1)[ivar])
+            IF(PACE_HARP2_L1C_vars.(pointer_ndim)[ivar] gt 1)THEN $
+                FOR idim=1,PACE_HARP2_L1C_vars.(pointer_ndim)[ivar]-1 DO dim_ivar=[dim_ivar,dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1+idim)[ivar])]
+            dataput=MAKE_ARRAY(dim_ivar,/FLOAT)
+            FOR ibin_accross_track=0,bins_across_track-1 DO dataput[ibin_accross_track,*]=(data_RSP.DATA.(rsp_var_map)._data[*,0]-Add_offset[ivar])/scale_factor[ivar]
+            
+            NCDF_VARPUT,group_id,var_id[ivar],dataput
+        ENDFOR
+
+        ;ctp
+        pace_vars=['ctp_water_cloud'];scaled by factor 100
+        RSP_vars=['CLOUD_TOP_PRESSURE']
+        nmap=n_elements(RSP_vars)
+        FOR imap=0,nmap-1 DO BEGIN
+            ivar=where(PACE_HARP2_L1C_vars.(0) eq pace_vars[imap])
+            ivar=ivar[0]
+            rsp_var_map=where(TAG_NAMES(data_RSP.DATA) eq RSP_vars[imap])
+            dim_ivar=dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1)[ivar])
+            IF(PACE_HARP2_L1C_vars.(pointer_ndim)[ivar] gt 1)THEN $
+                FOR idim=1,PACE_HARP2_L1C_vars.(pointer_ndim)[ivar]-1 DO dim_ivar=[dim_ivar,dimensions_rsp.(PACE_HARP2_L1C_vars.(pointer_dim1+idim)[ivar])]
+            dataput=MAKE_ARRAY(dim_ivar,/FLOAT)
+            FOR ibin_accross_track=0,bins_across_track-1 DO dataput[ibin_accross_track,*]=(data_RSP.DATA.(rsp_var_map)._data[*,0]-Add_offset[ivar])/scale_factor[ivar]/100.
+            
+            NCDF_VARPUT,group_id,var_id[ivar],dataput
+        ENDFOR
+
 
         IF ~KEYWORD_SET(switch_no_talk)THEN print,'Closing output file'
         ;ncdf_control, id, /endef
